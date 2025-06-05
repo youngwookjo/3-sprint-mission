@@ -60,13 +60,13 @@ export class Article {
   };
 
   set createdAt(date) {
+    const isValidDate = (validDate) => validDate instanceof Date && !isNaN(validDate.getTime());
+
     if (!date) {
       this._createdAt = new Date();
-    } else if (typeof date === 'string' || typeof date === 'number') {
-      const parsed = new Date(date);
-      this._createdAt = isNaN(parsed) ? new Date() : parsed;
     } else {
-      this._createdAt = new Date();
+      const parsed = new Date(date);
+      this._createdAt = isValidDate(parsed) ? parsed : new Date();
     }
-  };
+  }
 };
