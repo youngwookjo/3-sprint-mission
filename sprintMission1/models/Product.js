@@ -10,12 +10,10 @@ export class Product {
     this._favoriteCount = favoriteCount; // 찜하기 수
   };
 
-  //최대한 ++ 로많이쓴다
   favorite() {
     this._favoriteCount++; // 찜하기 수 증가
   };
 
-  //이름
   get name() {
     return this._name;
   };
@@ -39,8 +37,6 @@ export class Product {
     return this._description;
   };
 
-  // 상품 설명은 문자열 또는 숫자여야 하며, 빈 문자열인 경우 '상품 설명이 없습니다'로 설정
-  // 숫자인 경우 문자열로 변환하여 저장합니다.
   set description(description) {
     if (typeof description === 'string' || typeof description === 'number') {
       this._description = description === '' ? '상품 설명이 없습니다' : String(description);
@@ -53,9 +49,6 @@ export class Product {
     return this._price;
   };
 
-  /* 판매 가격은 숫자여야 하며, 0 이상이어야 합니다.
-  음수나 문자열은 허용하지 않습니다.
-   max 값도 선언하여 제한할필요가있음  서비스 max값 보고 판단*/
   set price(price) {
     if (typeof price === 'number' && price >= 0 && price < 1000000000) {
       this._price = price;
@@ -75,16 +68,13 @@ export class Product {
       tags = [tags];
     }
 
-    // 해시태그는 문자열 또는 문자열 배열이어야 하며, 각 해시태그는 1자 이상 20자 이하입니다.
     if (Array.isArray(tags) && tags.every(tag => typeof tag === 'string')) {
-      tagArray = tags.map(tag => tag.trim()).filter(tag => !tag); //tag => !tag 이미위에서 string 체크를했기때문에 가능
+      tagArray = tags.map(tag => tag.trim()).filter(tag => !tag); //tag => !tag 
     } else {
       throw new Error(ERROR_MESSAGES.PRODUCT_TAGS_INVALID);
     }
 
-
     const resultTag = [];
-
     for (let tag of tagArray) {
       if (tag.length < 1 || tag.length > 20) {
         throw new Error(ERROR_MESSAGES.PRODUCT_TAGS_LENGTH_INVALID(tag));
@@ -93,12 +83,10 @@ export class Product {
       // startWith tag.startsWith('#') #이있는지 체크
       const tagReplace = tag.startsWith('#') ? tag : `#${tag}`;
 
-      // 해시태그는 중복되지 않도록 처리합니다. 중복제거 set관련 찾아보기
       if (!resultTag.includes(tagReplace)) {
         resultTag.push(tag);
       }
     };
-
     this._tags = resultTag;
   };
 
@@ -116,7 +104,7 @@ export class Product {
     if (!Array.isArray(images)) {
       throw new Error(ERROR_MESSAGES.PRODUCT_IMAGES_TYPE_INVALID);
     }
-    //every는 순회하기떄문에 최대한 묶음으로 처리
+
     if (!images.every(image => typeof image === 'string' && urlPattern.test(image))) {
       throw new Error(ERROR_MESSAGES.PRODUCT_IMAGES_ARRAY_INVALID);
     }
