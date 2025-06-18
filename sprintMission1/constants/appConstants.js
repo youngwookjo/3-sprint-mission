@@ -14,7 +14,7 @@ export const ERROR_MESSAGES = {
   ARTICLE_TITLE_REQUIRED: '제목은 필수 입력값입니다.',
   ARTICLE_CONTENT_INVALID: '내용은 문자열 또는 숫자여야 합니다.',
   ARTICLE_WRITER_INVALID: '작성자는 1~20자 사이의 문자열이어야 합니다.',
-  ARTICLE_ID_REQUIRED: '게시글 ID는 필수 입력값입니다.',
+  ARTICLE_TITLE_REQUIRED: '게시글 제목은 필수 입력값입니다.',
   ARTICLE_DATA_REQUIRED: '게시글 데이터는 필수 입력값입니다.',
   ARTICLE_ID_DATA_REQUIRED: '게시글 ID 혹은 데이터가 없습니다다.',
 };

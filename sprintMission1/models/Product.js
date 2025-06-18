@@ -69,7 +69,7 @@ export class Product {
     }
 
     if (Array.isArray(tags) && tags.every(tag => typeof tag === 'string')) {
-      tagArray = tags.map(tag => tag.trim()).filter(tag => !tag); //tag => !tag 
+      tagArray = tags.map(tag => tag.trim()).filter(Boolean);
     } else {
       throw new Error(ERROR_MESSAGES.PRODUCT_TAGS_INVALID);
     }
@@ -84,7 +84,7 @@ export class Product {
       const tagReplace = tag.startsWith('#') ? tag : `#${tag}`;
 
       if (!resultTag.includes(tagReplace)) {
-        resultTag.push(tag);
+        resultTag.push(tagReplace);
       }
     };
     this._tags = resultTag;
