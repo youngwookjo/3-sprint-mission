@@ -7,9 +7,11 @@ const getArticleList = (page = 1, size = 10) =>
     .then((response) => {
       HE.validateFetchResponse(response, 'getArticleList');
       return response.json();
-    }).then((jsonData) => {
+    })
+    .then((jsonData) => {
       return jsonData;
-    }).catch((error) => {
+    })
+    .catch((error) => {
       HE.handleAxiosError(error, 'getArticleList');
       throw error;
     });
@@ -35,30 +37,35 @@ const getArticle = (articleId) => {
 };
 
 //게시글 생성
-const createArticle = ({ articleData } = {}) => {
-  if (!articleData) {
-    throw new Error(ERROR_MESSAGES.ARTICLE_ID_REQUIRED);
-  }
-
-  return fetch(`${URL}/articles`, {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(articleData),
-  })
-    .then(response => {
-      HE.validateFetchResponse(response, 'createArticle');
-      return response.json();
+const createArticle = ({ title = '', content = '', image = '' } = {}) => {
+  if (!title) {
+    throw new Error(ARTICLE_TITLE_REQUIRED);
+  } else {
+    const articleData = {
+      title,
+      content,
+      image,
+    };
+    return fetch(`${URL}/articles`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(articleData),
     })
-    .then(jsonData => {
-      return jsonData;
-    })
-    .catch(error => {
-      HE.handleAxiosError(error, 'createArticle');
-      throw error;
-    });
-};
+      .then(response => {
+        HE.validateFetchResponse(response, 'createArticle');
+        return response.json();
+      })
+      .then(jsonData => {
+        return jsonData;
+      })
+      .catch(error => {
+        HE.handleAxiosError(error, 'createArticle');
+        throw error;
+      });
+  };
+}
 
 // 게시글 수정
 const patchArticle = (articleId, articleData = {}) => {
