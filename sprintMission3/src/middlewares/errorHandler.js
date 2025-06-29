@@ -4,10 +4,10 @@ export function errorHandler(err, req, res, next) {
   console.error(err);
 
   if (err.code === 'LIMIT_FILE_SIZE') {
-    return res.status(400).json({ message: IMAGE_FILE_SIZE_ERROR });
+    return res.status(400).json({ message: ERROR_MESSAGES.FILE_SIZE_ERROR });
   }
 
-  if (err.message === IMAGE_INVAILD_ERROR) {
+  if (err.message === ERROR_MESSAGES.IMAGE_INVAILD_ERROR) {
     return res.status(400).json({ message: err.message });
   }
 

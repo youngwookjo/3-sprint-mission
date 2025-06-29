@@ -1,6 +1,6 @@
 import { Router } from "express";
 import CommentController from "../controllers/commentController.js";
-import { validateCreateComment, validatePatchComment } from "../middlewares/vaildateComment.js";
+import { validateCreateComment, validatePatchComment } from "../middlewares/validateComment.js";
 
 export const productCommentRouter = Router();
 export const freeCommentRouter = Router();
