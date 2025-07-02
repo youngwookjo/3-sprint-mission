@@ -2,10 +2,11 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const ArticleService = {
-  async getArticleList({ offset = '0', limit = '10' } = {}) {
+  async getArticleList({ offset = '0', limit = '10', orderBy = undefined } = {}) {
     return await prisma.article.findMany({
       skip: parseInt(offset),
       take: parseInt(limit),
+      orderBy,
       select: {
         id: true,
         title: true,

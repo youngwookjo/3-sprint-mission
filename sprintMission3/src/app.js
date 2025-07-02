@@ -1,5 +1,8 @@
+//환경변수 로딩
+import dotenv from 'dotenv';
+dotenv.config();
 // 프레임워크,외부 라이브러리
-import express from 'express'
+import express from 'express';
 import cors from 'cors';
 //미들웨어 & 설정
 import corsOptions from './config/corsOptions.js';
@@ -10,7 +13,9 @@ import { productCommentRouter, freeCommentRouter } from './routes/commentRouter.
 import articleRouter from './routes/articleRouter.js';
 import uploadImageRouter from './routes/uploadImageRouter.js';
 
+
 const app = express()
+const PORT = process.env.PORT || 3000;
 
 //기본 미들웨어
 app.use(cors(corsOptions));
@@ -26,4 +31,7 @@ app.use('/upload', uploadImageRouter);
 //에러 핸들러
 app.use(errorHandler);
 
-app.listen(3000);
+
+app.listen(PORT, () => {
+  console.log(`서버가 ${PORT} 포트에서 실행 중입니다.`);
+});
