@@ -4,10 +4,13 @@ import { ARTICLE_ERROR } from "../constants/articleConstants.js";
 const ArticleController = {
   async getArticleList(req, res, next) {
     try {
-      const { offset, limit } = req.query;
+      const { offset, limit, } = req.query;
+      let orderBy = req.query.orderBy;
+      orderBy = (orderBy === 'recent') ? { createdAt: 'desc' } : undefined;
       const articles = await ArticleService.getArticleList({
         offset,
         limit,
+        orderBy
       });
       res.json(articles);
     } catch (error) {
