@@ -11,7 +11,7 @@ const ProductService = {
         { description: { contains: keyword, mode: 'insensitive' } },
       ]
     }
-    return await prisma.product.findMany({
+    const data = await prisma.product.findMany({
       skip: parseInt(offset),
       take: parseInt(limit),
       orderBy,
@@ -23,6 +23,19 @@ const ProductService = {
         createdAt: true,
       }
     })
+    const total = await prisma.product.count({
+      where,
+    })
+    const pages = Math.ceil(total / parseInt(limit));
+    return {
+      data,
+      meta: {
+        total,
+        pages,
+        offset: parseInt(offset),
+        limit: parseInt(limit),
+      }
+    }
   },
 
   async getproduct(id) {
