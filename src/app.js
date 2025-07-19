@@ -8,6 +8,7 @@ import cors from 'cors';
 import corsOptions from './config/corsOptions.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 //내부 라우터
+import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
 import { productCommentRouter, freeCommentRouter } from './routes/commentRouter.js';
 import articleRouter from './routes/articleRouter.js';
@@ -23,6 +24,7 @@ app.use(express.json());
 //정적 파일 제공
 app.use('/files', express.static('uploads'));
 //라우터
+app.use('/users', userRouter);
 app.use('/products', productRouter);
 app.use('/articles', articleRouter);
 app.use('/product-comments', productCommentRouter);

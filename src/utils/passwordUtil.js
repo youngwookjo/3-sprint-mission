@@ -30,4 +30,4 @@ const isPasswordValid = async (plainPassword, hashedPassword) => {
   }
 };
 
-export default { hashPassword, isPasswordValid };
+export { hashPassword, isPasswordValid };
