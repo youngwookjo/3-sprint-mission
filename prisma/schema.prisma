@@ -34,7 +34,7 @@ model Product {
   comments    Comment[]
   userId      String
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ProductLike ProductLike[]
+  likes       ProductLike[]
 }
 
 model Article {

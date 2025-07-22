@@ -32,7 +32,7 @@ const CommentService = {
   },
 
   async getComment(id) {
-    return await prisma.comment.findUniqueOrThrow({
+    return await prisma.comment.findUnique({
       where: { id },
       select: {
         id: true,

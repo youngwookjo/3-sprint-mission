@@ -22,13 +22,14 @@ const ProductController = {
   },
 
   async getproduct(req, res, next) {
-    const { id } = req.params;
+    const id = req.params.id;
+    const userId = req.user?.userId;
     try {
-      const product = await ProductService.getproduct(id);
-      res.json(product);
+      const data = await ProductService.getProductWithLike(id, userId);
+      res.json(data);
     } catch (error) {
-      error.status = 404;
-      error.message = PRODUCT_ERROR.GET_PRODUCT_ERROR;
+      error.status = error.status || 500;
+      error.message = error.message || PRODUCT_ERROR.GET_PRODUCT_ERROR;
       next(error);
     }
   },
@@ -36,11 +37,6 @@ const ProductController = {
   async createProduct(req, res, next) {
     try {
       const userId = req.user?.userId;
-      if (!userId) {
-        const error = new Error('사용자 ID가 없습니다.');
-        error.status = 400;
-        throw error;
-      }
       const data = { ...req.body, userId };
       const product = await ProductService.createProduct(data);
       res.status(201).json(product);
@@ -74,6 +70,32 @@ const ProductController = {
       next(error);
     }
   },
+
+  async likeProduct(req, res, next) {
+    const productId = req.params.id;
+    const userId = req.user?.userId;
+    try {
+      const product = await ProductService.likeProduct(productId, userId);
+      res.json(product);
+    } catch (error) {
+      error.status = 500;
+      error.message = '상품 좋아요 중 오류가 발생했습니다.';
+      next(error);
+    }
+  },
+
+  async unlikeProduct(req, res, next) {
+    const productId = req.params.id;
+    const userId = req.user?.userId;
+    try {
+      await ProductService.unlikeProduct(productId, userId);
+      res.sendStatus(204);
+    } catch (error) {
+      error.status = 500;
+      error.message = '상품 좋아요 취소 중 오류가 발생했습니다.';
+      next(error);
+    }
+  }
 }
 
 export default ProductController;

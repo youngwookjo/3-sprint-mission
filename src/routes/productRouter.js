@@ -11,8 +11,12 @@ productRouter.route('/')
   .post(validateCreateProduct, auth.verifyAccessToken, ProductController.createProduct);
 
 productRouter.route('/:id')
-  .get(ProductController.getproduct)
+  .get(auth.optionalVerifyToken, ProductController.getproduct)
   .patch(validatePatchProduct, auth.verifyAccessToken, auth.createVerifyAuth(ProductService.getproduct, '상품'), ProductController.patchProduct)
   .delete(auth.verifyAccessToken, auth.createVerifyAuth(ProductService.getproduct, '상품'), ProductController.deleteProduct);
+
+productRouter.route('/:id/like')
+  .post(auth.verifyAccessToken, ProductController.likeProduct)
+  .delete(auth.verifyAccessToken, ProductController.unlikeProduct);
 
 export default productRouter;

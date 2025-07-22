@@ -1,7 +1,6 @@
 import { ERROR_MESSAGES } from "../constants/errorConstants.js";
 
 export function errorHandler(err, req, res, next) {
-  console.error(err);
 
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ message: ERROR_MESSAGES.FILE_SIZE_ERROR });
@@ -20,7 +19,7 @@ export function errorHandler(err, req, res, next) {
   }
 
   if (err.name === 'UnauthorizedError') {
-    console.error('토큰에러발생', err);
+    console.error('토큰 에러 발생',err);
     return res.status(401).json({ message: '로그인한 유저만 가능합니다'});
   }
 

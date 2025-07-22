@@ -16,5 +16,5 @@ userRouter.route('/')
 
 userRouter.patch('/change-password', auth.verifyAccessToken, userController.userChangePassword);
 userRouter.get('/registered-products', auth.verifyAccessToken, userController.getUserRegisteredProducts);
-
+userRouter.get('/liked-products', auth.verifyAccessToken, userController.getUserLikedProducts);
 export default userRouter;

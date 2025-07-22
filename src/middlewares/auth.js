@@ -1,4 +1,5 @@
 import { expressjwt } from 'express-jwt'
+import  jwt  from 'jsonwebtoken';
 
 const verifyAccessToken = expressjwt({
   secret: process.env.JWT_ACCESS_SECRET,
@@ -37,7 +38,19 @@ const createVerifyAuth = (getResource, resourceName) => {
       error.message = error.message || `${resourceName} 권한 확인 중 오류가 발생했습니다.`;
       next(error);
     }
-  };
+  }
+};
+
+const optionalVerifyToken = (req, res, next) => {
+  const auth = req.headers.authorization;
+  if (!auth) return next();
+  const token = auth.split(' ')[1];
+  try { 
+    req.user = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  } catch (err) {
+    next(err);
+  }
+  next();
 };
 
 
@@ -45,5 +58,6 @@ const createVerifyAuth = (getResource, resourceName) => {
 export default {
   verifyAccessToken,
   verifyRefreshToken,
-  createVerifyAuth
+  createVerifyAuth,
+  optionalVerifyToken
 };

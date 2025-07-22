@@ -44,8 +44,8 @@ const userLogin = async (email, password) => {
   return filterSensitiveUserData(user);
 }
 
-const createToken = (user, type) => {
-    const payLoad = { userId: user.id }
+const createToken = (user, type = 'access') => {
+  const payLoad = { userId: user.id }
   const jwtSecret = type === 'access' ? process.env.JWT_ACCESS_SECRET : process.env.JWT_REFRESH_SECRET;
   const expiresIn = type === 'access' ? '1h' : '2w';
   return jwt.sign(payLoad, jwtSecret, { expiresIn })
@@ -70,7 +70,7 @@ const refreshToken = async (userId, refreshToken) => {
     error.status = 401;
     throw error;
   }
-  return createToken(user)
+  return createToken(user, 'access');
 }
 
 const tokenGetUser = async (userId) => {
@@ -114,6 +114,17 @@ const getUserRegisteredProducts = async (userId) => {
   return data;
 }
 
+const getUserLikedProducts = async (userId) => {
+  const user = await userRepository.findById(userId);
+  if (!user) {
+    const error = new Error('존재하지 않는 유저입니다.');
+    error.status = 404;
+    throw error;
+  }
+  const products = await userRepository.getUserLikedProducts(userId);
+  return products;
+}
+
 export default {
   userCreate,
   userLogin,
@@ -123,5 +134,6 @@ export default {
   tokenGetUser,
   userChangePassword,
   getUserRegisteredProducts,
-  updateUserRefreshToken
+  updateUserRefreshToken,
+  getUserLikedProducts
 }

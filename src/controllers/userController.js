@@ -1,4 +1,3 @@
-import { ca } from 'zod/locales';
 import userService from '../services/userService.js';
 
 const creteUser = async (req, res, next) => {
@@ -101,13 +100,24 @@ const logoutUser = async (req, res, next) => {
   }
 }
 
-  export default {
-    creteUser,
-    userLogin,
-    userTokenRefresh,
-    tokenGetUser,
-    userPatch,
-    userChangePassword,
-    getUserRegisteredProducts,
-    logoutUser
+const getUserLikedProducts = async (req, res, next) => {
+  const userId = req.user?.userId;
+  try {
+    const products = await userService.getUserLikedProducts(userId);
+    return res.json(products);
+  } catch (error) {
+    next(error);
   }
+}
+
+export default {
+  creteUser,
+  userLogin,
+  userTokenRefresh,
+  tokenGetUser,
+  userPatch,
+  userChangePassword,
+  getUserRegisteredProducts,
+  logoutUser,
+  getUserLikedProducts
+}

@@ -17,7 +17,7 @@ const ArticleService = {
   },
 
   async getArticle(id) {
-    return await prisma.article.findUniqueOrThrow({
+    return await prisma.article.findUnique({
       where: { id },
       select: {
         id: true,

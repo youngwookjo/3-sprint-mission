@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const findbyEmail = async (email) => {
   try {
-    return await prisma.user.findUniqueOrThrow({
+    return await prisma.user.findUnique({
       where: { email },
     });
   } catch (error) {
@@ -16,7 +16,7 @@ const findbyEmail = async (email) => {
 
 const findById = async (id) => {
   try {
-    return await prisma.user.findUniqueOrThrow({
+    return await prisma.user.findUnique({
       where: { id },
     });
   } catch (error) {
@@ -44,14 +44,14 @@ const createUser = async (user) => {
 }
 
 const updateUser = async (id, data) => {
-  try{
-  return prisma.user.update({
-    where: {
-      id,
-    },
-    data,
-  })
-} catch (error) {
+  try {
+    return prisma.user.update({
+      where: {
+        id,
+      },
+      data,
+    })
+  } catch (error) {
     error.status = 500;
     error.message = '사용자 업데이트 중 오류가 발생했습니다.';
     throw error;
@@ -78,10 +78,37 @@ const getUserRegisteredProducts = async (userId) => {
   }
 }
 
+const getUserLikedProducts = async (userId) => {
+  try {
+    return await prisma.product.findMany({
+      where: {
+        likes: {
+          some: {
+            userId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        tags: true,
+        createdAt: true,
+      }
+    });
+  } catch (error) {
+    error.status = 500;
+    error.message = '사용자가 좋아요한 상품 조회 중 오류가 발생했습니다.';
+    throw error;
+  }
+}
+
 export default {
   findbyEmail,
   createUser,
   updateUser,
   findById,
-  getUserRegisteredProducts
+  getUserRegisteredProducts,
+  getUserLikedProducts
 }

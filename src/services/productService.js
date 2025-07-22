@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { th } from 'zod/locales';
 
 const prisma = new PrismaClient();
 
@@ -39,7 +40,7 @@ const ProductService = {
   },
 
   async getproduct(id) {
-    return await prisma.product.findUniqueOrThrow({
+    const data = await prisma.product.findUnique({
       where: { id },
       select: {
         id: true,
@@ -51,6 +52,12 @@ const ProductService = {
         userId: true,
       }
     })
+    if (!data) {
+      const error = new Error('상품을 찾을 수 없습니다.');
+      error.status = 404;
+      throw error;
+    }
+    return data;
   },
 
   async createProduct(data) {
@@ -91,26 +98,55 @@ const ProductService = {
     return await prisma.product.delete({ where: { id } });
   },
 
-  async likeProduct(id, userId) {
-    return await prisma.product.update({
-      where: { id },
+  async likeProduct(productId, userId) {
+    return await prisma.productLike.create({
       data: {
-        likes: {
-          connect: { id: userId },
-        },
+        userId,
+        productId,
       },
+    })
+  },
+
+  async unlikeProduct(productId, userId) {
+    await prisma.productLike.delete({
+      where: {
+        userId_productId: { userId, productId },
+      },
+    })
+  },
+
+  async getProductWithLike(id, userId) {
+    const data = await prisma.product.findUnique({
+      where: { id },
       select: {
         id: true,
         name: true,
+        description: true,
+        price: true,
+        tags: true,
+        createdAt: true,
+        userId: true,
         likes: {
+          where: {
+            userId,
+          },
           select: {
             id: true,
-            nickname: true,
-          }
-        }
-      }
-    })
+          },
+        },
+      },
+    });
+
+    if (!data) {
+      error.status = 404;
+      error.message = '상품을 찾을 수 없습니다.';
+      throw error;
+    }
+
+    const isLiked = !!data.likes.length
+    const { likes, ...product } = data;
+    return { ...product, isLiked };
   }
-};
+}
 
 export default ProductService;
