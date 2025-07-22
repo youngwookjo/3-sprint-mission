@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const findbyEmail = async (email) => {
   try {
-    return await prisma.user.findUnique({
+    return await prisma.user.findUniqueOrThrow({
       where: { email },
     });
   } catch (error) {
@@ -16,7 +16,7 @@ const findbyEmail = async (email) => {
 
 const findById = async (id) => {
   try {
-    return await prisma.user.findUnique({
+    return await prisma.user.findUniqueOrThrow({
       where: { id },
     });
   } catch (error) {
@@ -49,7 +49,7 @@ const updateUser = async (id, data) => {
     where: {
       id,
     },
-    data: data,
+    data,
   })
 } catch (error) {
     error.status = 500;

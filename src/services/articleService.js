@@ -24,6 +24,7 @@ const ArticleService = {
         title: true,
         content: true,
         createdAt: true,
+        userId: true,
       }
     })
   },

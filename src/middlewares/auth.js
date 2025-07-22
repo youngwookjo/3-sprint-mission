@@ -1,6 +1,4 @@
 import { expressjwt } from 'express-jwt'
-import ProductService from '../services/productService.js';
-import ArticleService from '../services/articleService.js';
 
 const verifyAccessToken = expressjwt({
   secret: process.env.JWT_ACCESS_SECRET,
@@ -21,7 +19,6 @@ const createVerifyAuth = (getResource, resourceName) => {
 
     try {
       const resource = await getResource(resourceId);
-
       if (!resource) {
         const error = new Error(`존재하지 않는 ${resourceName}입니다.`);
         error.status = 404;

@@ -4,13 +4,17 @@ import auth from '../middlewares/auth.js';
 
 const userRouter = Router();
 
+
 userRouter.post('/register', userController.creteUser);
 userRouter.post('/login', userController.userLogin);
-userRouter.post('/token/refresh', userController.userTokenRefresh);
+userRouter.post('/logout', auth.verifyAccessToken, userController.logoutUser);
+userRouter.post('/token/refresh', auth.verifyRefreshToken, userController.userTokenRefresh);
 
 userRouter.route('/')
   .get(auth.verifyAccessToken, userController.tokenGetUser)
   .patch(auth.verifyAccessToken, userController.userPatch);
 
-userRouter.post('/change-password', auth.verifyAccessToken, userController.userChangePassword);
-userRouter.get('/user/registered-products', auth.verifyAccessToken, userController.getUserRegisteredProducts);
+userRouter.patch('/change-password', auth.verifyAccessToken, userController.userChangePassword);
+userRouter.get('/registered-products', auth.verifyAccessToken, userController.getUserRegisteredProducts);
+
+export default userRouter;

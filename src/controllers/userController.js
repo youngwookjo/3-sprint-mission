@@ -1,3 +1,4 @@
+import { ca } from 'zod/locales';
 import userService from '../services/userService.js';
 
 const creteUser = async (req, res, next) => {
@@ -17,11 +18,11 @@ const userLogin = async (req, res, next) => {
     const accessToken = userService.createToken(user, 'access');
     const refreshToken = userService.createToken(user, 'refresh');
 
-    await userService.updateUser(user.id, { refreshToken });
+    await userService.updateUserRefreshToken(user.id, { refreshToken });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'none',
       path: '/token/refresh',
       maxAge: 1000 * 60 * 60 * 24 * 7 * 2
@@ -35,7 +36,7 @@ const userLogin = async (req, res, next) => {
 const userTokenRefresh = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    const { userId } = req.auth
+    const userId = req.auth?.userId;
     const accessToken = await userService.refreshToken(userId, refreshToken);
     return res.json({ accessToken });
   } catch (error) {
@@ -85,12 +86,28 @@ const getUserRegisteredProducts = async (req, res, next) => {
   }
 }
 
-export default {
-  creteUser,
-  userLogin,
-  userTokenRefresh,
-  tokenGetUser,
-  userPatch,
-  userChangePassword,
-  getUserRegisteredProducts
+const logoutUser = async (req, res, next) => {
+  const userId = req.user?.userId;
+  try {
+    await userService.updateUserRefreshToken(userId, { refreshToken: null });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'none',
+    })
+    return res.status(200).json({ message: '로그아웃 되었습니다' });
+  } catch (error) {
+    next(error);
+  }
 }
+
+  export default {
+    creteUser,
+    userLogin,
+    userTokenRefresh,
+    tokenGetUser,
+    userPatch,
+    userChangePassword,
+    getUserRegisteredProducts,
+    logoutUser
+  }

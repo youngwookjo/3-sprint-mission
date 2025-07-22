@@ -20,7 +20,8 @@ export function errorHandler(err, req, res, next) {
   }
 
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ message: '유효하지않거나 잘못된 토큰입니다'});
+    console.error('토큰에러발생', err);
+    return res.status(401).json({ message: '로그인한 유저만 가능합니다'});
   }
 
   if (err.status && err.message) {

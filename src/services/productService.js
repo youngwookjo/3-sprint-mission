@@ -48,6 +48,7 @@ const ProductService = {
         price: true,
         tags: true,
         createdAt: true,
+        userId: true,
       }
     })
   },
@@ -89,6 +90,27 @@ const ProductService = {
   async deleteProduct(id) {
     return await prisma.product.delete({ where: { id } });
   },
-}
+
+  async likeProduct(id, userId) {
+    return await prisma.product.update({
+      where: { id },
+      data: {
+        likes: {
+          connect: { id: userId },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        likes: {
+          select: {
+            id: true,
+            nickname: true,
+          }
+        }
+      }
+    })
+  }
+};
 
 export default ProductService;

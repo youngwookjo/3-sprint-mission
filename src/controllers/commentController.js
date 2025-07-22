@@ -27,10 +27,10 @@ const CommentController = {
       error.status = 400;
       return next(error);
     }
-    data = { ...req.body, userId };
+    const data = { ...req.body, userId };
     const id = { [setBoardTypeByBaseUrl(req.baseUrl)]: req.params.id };
     try {
-      const comment = await CommentService.createComment(id, req.body);
+      const comment = await CommentService.createComment(id, data);
       res.status(201).json(comment);
     } catch (error) {
       error.status = error.status || 500;

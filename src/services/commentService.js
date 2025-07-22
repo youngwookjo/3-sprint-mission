@@ -25,11 +25,21 @@ const CommentService = {
     return await prisma.comment.create({
       data: {
         content: data.content,
+        userId: data.userId,
         ...id,
-        user: {
-          connect: { id: data.userId }
-        }
       },
+    })
+  },
+
+  async getComment(id) {
+    return await prisma.comment.findUniqueOrThrow({
+      where: { id },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        userId: true,
+      }
     })
   },
 

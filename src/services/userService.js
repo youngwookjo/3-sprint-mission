@@ -1,6 +1,6 @@
 import { z } from "zod";
 import jwt from "jsonwebtoken";
-import userRepository from "../repositories/userRepository"
+import userRepository from "../repositories/userRepository.js"
 import { hashPassword, isPasswordValid } from "../utils/passwordUtil.js";
 
 const filterSensitiveUserData = (user) => {
@@ -52,7 +52,14 @@ const createToken = (user, type) => {
 }
 
 const updateUser = async (id, data) => {
-  const user = await userRepository.updateUser(id, data)
+  const { userId = data.id, email, password, newPassword, refreshToken, createdAt, updatedAt, ...safeData } = data;
+  const user = await userRepository.updateUser(id, safeData)
+  return filterSensitiveUserData(user);
+}
+
+const updateUserRefreshToken = async (id, data) => {
+  const refreshToken = { refreshToken: data.refreshToken };
+  const user = await userRepository.updateUser(id, refreshToken)
   return filterSensitiveUserData(user);
 }
 
@@ -102,7 +109,9 @@ const getUserRegisteredProducts = async (userId) => {
     error.status = 404;
     throw error;
   }
-  return await userRepository.getUserRegisteredProducts(userId);
+  const products = await userRepository.getUserRegisteredProducts(userId);
+  const data = {userEmail: user.email,userNickname: user.nickname , products};
+  return data;
 }
 
 export default {
@@ -113,5 +122,6 @@ export default {
   refreshToken,
   tokenGetUser,
   userChangePassword,
-  getUserRegisteredProducts
+  getUserRegisteredProducts,
+  updateUserRefreshToken
 }
