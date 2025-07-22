@@ -35,11 +35,18 @@ const ProductController = {
 
   async createProduct(req, res, next) {
     try {
-      const product = await ProductService.createProduct(req.body);
+      const userId = req.user?.userId;
+      if (!userId) {
+        const error = new Error('사용자 ID가 없습니다.');
+        error.status = 400;
+        throw error;
+      }
+      const data = { ...req.body, userId };
+      const product = await ProductService.createProduct(data);
       res.status(201).json(product);
     } catch (error) {
-      error.status = 400;
-      error.message = PRODUCT_ERROR.CREATE_PRODUCT_ERROR;
+      error.status = error.status || 500;
+      error.message = error.message || PRODUCT_ERROR.CREATE_PRODUCT_ERROR;
       next(error);
     }
   },

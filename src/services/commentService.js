@@ -26,6 +26,9 @@ const CommentService = {
       data: {
         content: data.content,
         ...id,
+        user: {
+          connect: { id: data.userId }
+        }
       },
     })
   },

@@ -33,6 +33,9 @@ const ArticleService = {
       data: {
         title: data.title,
         content: data.content || null,
+        user: {
+          connect: { id: data.userId }
+        }
       },
     })
   },

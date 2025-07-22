@@ -59,6 +59,9 @@ const ProductService = {
         description: data.description || null,
         price: data.price,
         tags: data.tags || [],
+        user: {
+          connect: { id: data.userId },
+        },
       },
     })
   },

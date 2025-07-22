@@ -33,12 +33,18 @@ const ArticleController = {
   },
 
   async createArticle(req, res, next) {
+    const userId = req.user?.userId;
+    if (!userId) {
+      const error = new Error('사용자 ID가 없습니다.');
+      error.status = 400;
+    }
+    const data = { ...req.body, userId };
     try {
-      const article = await ArticleService.createArticle(req.body);
+      const article = await ArticleService.createArticle(data);
       res.status(201).json(article);
     } catch (error) {
-      error.status = 400;
-      error.message = ARTICLE_ERROR.CREATE_ARTICLE_ERROR;
+      error.status = error.status || 500;
+      error.message = error.message || ARTICLE_ERROR.CREATE_ARTICLE_ERROR;
       next(error);
     }
   },

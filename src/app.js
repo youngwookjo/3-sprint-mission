@@ -4,6 +4,7 @@ dotenv.config();
 // 프레임워크,외부 라이브러리
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 //미들웨어 & 설정
 import corsOptions from './config/corsOptions.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -15,12 +16,13 @@ import articleRouter from './routes/articleRouter.js';
 import uploadImageRouter from './routes/uploadImageRouter.js';
 
 
-const app = express()
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 //기본 미들웨어
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 //정적 파일 제공
 app.use('/files', express.static('uploads'));
 //라우터

@@ -21,13 +21,20 @@ const CommentController = {
   },
 
   async createComment(req, res, next) {
+    const userId = req.user?.userId;
+    if (!userId) {
+      const error = new Error('사용자 ID가 없습니다.');
+      error.status = 400;
+      return next(error);
+    }
+    data = { ...req.body, userId };
     const id = { [setBoardTypeByBaseUrl(req.baseUrl)]: req.params.id };
     try {
       const comment = await CommentService.createComment(id, req.body);
       res.status(201).json(comment);
     } catch (error) {
-      error.status = 400;
-      error.message = COMMENT_ERROR.CREATE_COMMENT_ERROR;
+      error.status = error.status || 500;
+      error.message = error.message || COMMENT_ERROR.CREATE_COMMENT_ERROR;
       next(error);
     }
   },

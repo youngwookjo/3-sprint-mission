@@ -1,16 +1,18 @@
 import { Router } from 'express';
+import auth from '../middlewares/auth.js';
 import ArticleController from '../controllers/articleController.js';
+import ArticleService from '../services/articleService.js';
 import { validateCreateArticle, validatePatchArticle } from '../middlewares/validateArticle.js';
 
 const articleRouter = Router();
 
 articleRouter.route('/')
   .get(ArticleController.getArticleList)
-  .post(validateCreateArticle, ArticleController.createArticle);
+  .post(validateCreateArticle, auth.verifyAccessToken, ArticleController.createArticle);
 
 articleRouter.route('/:id')
   .get(ArticleController.getArticle)
-  .patch(validatePatchArticle, ArticleController.patchArticle)
-  .delete(ArticleController.deleteArticle);
+  .patch(validatePatchArticle, auth.verifyAccessToken, auth.createVerifyAuth(ArticleService.getArticle,'게시글'), ArticleController.patchArticle)
+  .delete(auth.verifyAccessToken, auth.createVerifyAuth(ArticleService.getArticle,'게시글'), ArticleController.deleteArticle);
 
 export default articleRouter;

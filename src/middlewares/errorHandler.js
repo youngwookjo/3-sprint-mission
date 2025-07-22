@@ -19,6 +19,10 @@ export function errorHandler(err, req, res, next) {
     return res.status(409).json({ message: ERROR_MESSAGES.P2002_ERROR });
   }
 
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: '유효하지않거나 잘못된 토큰입니다'});
+  }
+
   if (err.status && err.message) {
     return res.status(err.status).json({ message: err.message });
   }
