@@ -6,7 +6,7 @@ import { hashPassword, isPasswordValid } from "../utils/passwordUtil.js";
 import { checkUser } from "../utils/checkUser.js";
 
 const filterSensitiveUserData = (user) => {
-  const { password, ...rest } = user
+  const { password, refreshToken, ...rest } = user
   return rest
 }
 
@@ -54,8 +54,7 @@ const createToken = (user, type = 'access') => {
 }
 
 const updateUser = async (id, data) => {
-  const { email, password, newPassword, refreshToken, createdAt, updatedAt, ...safeData } = data;
-  const user = await userRepository.updateUser(id, safeData)
+  const user = await userRepository.updateUser(id, data)
   return filterSensitiveUserData(user);
 }
 
@@ -95,7 +94,7 @@ const userChangePassword = async (userId, newPassword, oldPassword) => {
     throw error;
   }
   const hashedNewPassword = await hashPassword(newPassword);
-  const updateUser = userRepository.updateUser(userId, { password: hashedNewPassword });
+  const updateUser = await userRepository.updateUser(userId, { password: hashedNewPassword });
   return filterSensitiveUserData(updateUser);
 }
 

@@ -73,9 +73,9 @@ const ArticleController = {
   },
 
   async likeArticle(req, res, next) {
-    const articleId = req.params.id;
     const userId = req.user?.userId;
     await checkUser(userId);
+    const articleId = req.params.id;
     try {
       const article = await ArticleService.likeArticle(userId, articleId);
       res.json(article);
@@ -87,9 +87,9 @@ const ArticleController = {
   },
 
   async unlikeArticle(req, res, next) {
-    const articleId = req.params.id;
     const userId = req.user?.userId;
     await checkUser(userId);
+    const articleId = req.params.id;
     try {
       await ArticleService.unlikeArticle(userId, articleId);
       res.sendStatus(204);

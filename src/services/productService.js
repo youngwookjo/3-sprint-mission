@@ -115,37 +115,36 @@ const ProductService = {
   },
 
   async getProductWithLike(userId, productId) {
-    const select = {
-      id: true,
-      name: true,
-      description: true,
-      price: true,
-      tags: true,
-      createdAt: true,
-      userId: true,
-    };
-
-    if (userId) {
-      select.likes = {
-        where: { userId },
-        select: { id: true },
-      };
-    }
-
     const data = await prisma.product.findUnique({
       where: { id: productId },
-      select,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        tags: true,
+        createdAt: true,
+        userId: true,
+      }
     });
-
     if (!data) {
       const error = new Error('상품을 찾을 수 없습니다.');
       error.status = 404;
       throw error;
     }
 
-    const isLiked = userId ? !!data.likes.length : false;
-    const { likes, ...product } = data;
-    return { ...product, isLiked };
+    if (!userId) {
+      return data;
+    }
+
+    const isLiked = await prisma.productLike.findUnique({
+      where: {
+        userId_productId: { userId, productId },
+      },
+    });
+
+    data.isLiked = !!isLiked;
+    return data;
   }
 }
 

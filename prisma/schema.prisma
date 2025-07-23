@@ -17,7 +17,7 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   products     Product[]
-  Article      Article[]
+  article      Article[]
   comments     Comment[]
   ProductLike  ProductLike[]
   ArticleLike  ArticleLike[]

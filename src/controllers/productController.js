@@ -74,9 +74,9 @@ const ProductController = {
   },
 
   async likeProduct(req, res, next) {
-    const productId = req.params.id;
     const userId = req.user?.userId;
     await checkUser(userId);
+    const productId = req.params.id;
     try {
       const product = await ProductService.likeProduct(userId, productId);
       res.json(product);
@@ -88,9 +88,9 @@ const ProductController = {
   },
 
   async unlikeProduct(req, res, next) {
-    const productId = req.params.id;
     const userId = req.user?.userId;
     await checkUser(userId);
+    const productId = req.params.id;
     try {
       await ProductService.unlikeProduct(userId, productId);
       res.sendStatus(204);

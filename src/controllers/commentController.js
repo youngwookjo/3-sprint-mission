@@ -1,6 +1,7 @@
 import CommentService from "../services/commentService.js";
 import { setBoardTypeByBaseUrl } from "../utils/boardTypeSet.js";
 import { COMMENT_ERROR } from "../constants/commentConstants.js";
+import { checkUser } from "../utils/checkUser.js";
 
 const CommentController = {
   async getCommentList(req, res, next) {
@@ -22,12 +23,8 @@ const CommentController = {
 
   async createComment(req, res, next) {
     const userId = req.user?.userId;
-    if (!userId) {
-      const error = new Error('사용자 ID가 없습니다.');
-      error.status = 400;
-      return next(error);
-    }
-    const data = { ...req.body, userId };
+    await checkUser(userId);
+    const data = { content: req.body.content, userId };
     const id = { [setBoardTypeByBaseUrl(req.baseUrl)]: req.params.id };
     try {
       const comment = await CommentService.createComment(id, data);

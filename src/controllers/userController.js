@@ -2,7 +2,12 @@ import userService from '../services/userService.js';
 
 const creteUser = async (req, res, next) => {
   try {
-    const user = req.body;
+    const user = {
+      email: req.body.email,
+      nickname: req.body.nickname,
+      password: req.body.password,
+      image: req.body.image
+    }
     const createdUser = await userService.userCreate(user);
     res.status(201).json(createdUser);
   } catch (error) {
@@ -54,7 +59,7 @@ const tokenGetUser = async (req, res, next) => {
 
 const userPatch = async (req, res, next) => {
   const userId = req.user?.userId;
-  const data = req.body;
+  const data = { nickname: req.body.nickname, image: req.body.image }
   try {
     const updatedUser = await userService.updateUser(userId, data);
     return res.json(updatedUser);
@@ -69,7 +74,8 @@ const userChangePassword = async (req, res, next) => {
   const oldPassword = req.body.oldPassword;
   try {
     const updatedUser = await userService.userChangePassword(userId, newPassword, oldPassword);
-    return res.json(updatedUser);
+    const message = "비밀번호가 변경되었습니다"
+    return res.json({updatedUser,message});
   } catch (error) {
     next(error);
   }

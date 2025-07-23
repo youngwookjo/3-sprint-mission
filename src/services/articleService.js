@@ -81,24 +81,15 @@ const ArticleService = {
   },
 
   async getArticleWithLike(userId, articleId) {
-    const select = {
-      id: true,
-      title: true,
-      content: true,
-      createdAt: true,
-      userId: true,
-    }
-
-    if (userId) {
-      select.likes = {
-        where: { userId },
-        select: { id: true }
-      }
-    }
-
     const data = await prisma.article.findUnique({
       where: { id: articleId },
-      select,
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        userId: true,
+      },
     });
 
     if (!data) {
@@ -107,13 +98,16 @@ const ArticleService = {
       throw error;
     }
 
-    const isLiked = !!data.likes.length
-    const { likes, ...article } = data;
-
-    return { ...article, isLiked};
+    if (userId) {
+      const isLiked = await prisma.articleLike.findUnique({
+        where: {
+          userId_articleId: { userId, articleId },
+        },
+      });
+      data.isLiked = !!isLiked;
+    }
+    return data;
   }
 }
-
-
 
 export default ArticleService;
