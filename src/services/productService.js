@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { th } from 'zod/locales';
 
 const prisma = new PrismaClient();
 
@@ -98,7 +97,7 @@ const ProductService = {
     return await prisma.product.delete({ where: { id } });
   },
 
-  async likeProduct(productId, userId) {
+  async likeProduct(userId, productId) {
     return await prisma.productLike.create({
       data: {
         userId,
@@ -107,7 +106,7 @@ const ProductService = {
     })
   },
 
-  async unlikeProduct(productId, userId) {
+  async unlikeProduct(userId, productId) {
     await prisma.productLike.delete({
       where: {
         userId_productId: { userId, productId },
@@ -115,35 +114,36 @@ const ProductService = {
     })
   },
 
-  async getProductWithLike(id, userId) {
+  async getProductWithLike(userId, productId) {
+    const select = {
+      id: true,
+      name: true,
+      description: true,
+      price: true,
+      tags: true,
+      createdAt: true,
+      userId: true,
+    };
+
+    if (userId) {
+      select.likes = {
+        where: { userId },
+        select: { id: true },
+      };
+    }
+
     const data = await prisma.product.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        price: true,
-        tags: true,
-        createdAt: true,
-        userId: true,
-        likes: {
-          where: {
-            userId,
-          },
-          select: {
-            id: true,
-          },
-        },
-      },
+      where: { id: productId },
+      select,
     });
 
     if (!data) {
+      const error = new Error('상품을 찾을 수 없습니다.');
       error.status = 404;
-      error.message = '상품을 찾을 수 없습니다.';
       throw error;
     }
 
-    const isLiked = !!data.likes.length
+    const isLiked = userId ? !!data.likes.length : false;
     const { likes, ...product } = data;
     return { ...product, isLiked };
   }

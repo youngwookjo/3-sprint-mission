@@ -1,7 +1,9 @@
 import { z } from "zod";
 import jwt from "jsonwebtoken";
 import userRepository from "../repositories/userRepository.js"
+import productRepository from "../repositories/productRepository.js";
 import { hashPassword, isPasswordValid } from "../utils/passwordUtil.js";
+import { checkUser } from "../utils/checkUser.js";
 
 const filterSensitiveUserData = (user) => {
   const { password, ...rest } = user
@@ -52,20 +54,19 @@ const createToken = (user, type = 'access') => {
 }
 
 const updateUser = async (id, data) => {
-  const { userId = data.id, email, password, newPassword, refreshToken, createdAt, updatedAt, ...safeData } = data;
+  const { email, password, newPassword, refreshToken, createdAt, updatedAt, ...safeData } = data;
   const user = await userRepository.updateUser(id, safeData)
   return filterSensitiveUserData(user);
 }
 
-const updateUserRefreshToken = async (id, data) => {
-  const refreshToken = { refreshToken: data.refreshToken };
+const updateUserRefreshToken = async (id, refreshToken) => {
   const user = await userRepository.updateUser(id, refreshToken)
   return filterSensitiveUserData(user);
 }
 
-const refreshToken = async (userId, refreshToken) => {
-  const user = await userRepository.findById(userId);
-  if (!user || user.refreshToken !== refreshToken) {
+const userTokenRefresh = async (userId, refreshToken) => {
+  const user = await checkUser(userId);
+  if (user.refreshToken !== refreshToken) {
     const error = new Error('유효하지 않은 리프레시 토큰입니다.');
     error.status = 401;
     throw error;
@@ -74,23 +75,18 @@ const refreshToken = async (userId, refreshToken) => {
 }
 
 const tokenGetUser = async (userId) => {
-  const user = await userRepository.findById(userId);
-  if (!user) {
-    const error = new Error('존재하지 않는 유저입니다.');
-    error.status = 404;
-    throw error;
-  }
+  const user = await checkUser(userId);
   return filterSensitiveUserData(user);
 }
 
-const userChangePassword = async (userId, newPassword) => {
-  const user = await userRepository.findById(userId);
-  if (!user) {
-    const error = new Error('존재하지 않는 유저입니다.');
-    error.status = 404;
+const userChangePassword = async (userId, newPassword, oldPassword) => {
+  const user = await checkUser(userId);
+  const isValidPassword = await isPasswordValid(oldPassword, user.password);
+  if (!isValidPassword) {
+    const error = new Error('현재 비밀번호가 일치하지 않습니다.');
+    error.status = 401;
     throw error;
   }
-
   const passwordSchema = z.string().min(8).max(20);
   const passwordValidation = passwordSchema.safeParse(newPassword);
   if (!passwordValidation.success) {
@@ -99,29 +95,20 @@ const userChangePassword = async (userId, newPassword) => {
     throw error;
   }
   const hashedNewPassword = await hashPassword(newPassword);
-  return updateUser(userId, { password: hashedNewPassword });
+  const updateUser = userRepository.updateUser(userId, { password: hashedNewPassword });
+  return filterSensitiveUserData(updateUser);
 }
 
 const getUserRegisteredProducts = async (userId) => {
-  const user = await userRepository.findById(userId);
-  if (!user) {
-    const error = new Error('존재하지 않는 유저입니다.');
-    error.status = 404;
-    throw error;
-  }
-  const products = await userRepository.getUserRegisteredProducts(userId);
-  const data = {userEmail: user.email,userNickname: user.nickname , products};
+  const user = await checkUser(userId);
+  const products = await productRepository.getUserRegisteredProducts(userId);
+  const data = { userEmail: user.email, userNickname: user.nickname, products };
   return data;
 }
 
 const getUserLikedProducts = async (userId) => {
-  const user = await userRepository.findById(userId);
-  if (!user) {
-    const error = new Error('존재하지 않는 유저입니다.');
-    error.status = 404;
-    throw error;
-  }
-  const products = await userRepository.getUserLikedProducts(userId);
+  await checkUser(userId);
+  const products = await productRepository.getUserLikedProducts(userId);
   return products;
 }
 
@@ -130,7 +117,7 @@ export default {
   userLogin,
   createToken,
   updateUser,
-  refreshToken,
+  userTokenRefresh,
   tokenGetUser,
   userChangePassword,
   getUserRegisteredProducts,

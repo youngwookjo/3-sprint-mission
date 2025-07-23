@@ -11,8 +11,12 @@ articleRouter.route('/')
   .post(validateCreateArticle, auth.verifyAccessToken, ArticleController.createArticle);
 
 articleRouter.route('/:id')
-  .get(ArticleController.getArticle)
+  .get(auth.optionalVerifyToken, ArticleController.getArticle)
   .patch(validatePatchArticle, auth.verifyAccessToken, auth.createVerifyAuth(ArticleService.getArticle,'게시글'), ArticleController.patchArticle)
   .delete(auth.verifyAccessToken, auth.createVerifyAuth(ArticleService.getArticle,'게시글'), ArticleController.deleteArticle);
+
+articleRouter.route('/:id/like')
+  .post(auth.verifyAccessToken, ArticleController.likeArticle)
+  .delete(auth.verifyAccessToken, ArticleController.unlikeArticle);
 
 export default articleRouter;

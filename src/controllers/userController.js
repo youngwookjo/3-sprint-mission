@@ -16,7 +16,6 @@ const userLogin = async (req, res, next) => {
     const user = await userService.userLogin(email, password);
     const accessToken = userService.createToken(user, 'access');
     const refreshToken = userService.createToken(user, 'refresh');
-
     await userService.updateUserRefreshToken(user.id, { refreshToken });
 
     res.cookie('refreshToken', refreshToken, {
@@ -36,7 +35,7 @@ const userTokenRefresh = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     const userId = req.auth?.userId;
-    const accessToken = await userService.refreshToken(userId, refreshToken);
+    const accessToken = await userService.userTokenRefresh(userId, refreshToken);
     return res.json({ accessToken });
   } catch (error) {
     next(error);
@@ -67,8 +66,9 @@ const userPatch = async (req, res, next) => {
 const userChangePassword = async (req, res, next) => {
   const userId = req.user?.userId;
   const newPassword = req.body.newPassword;
+  const oldPassword = req.body.oldPassword;
   try {
-    const updatedUser = await userService.userChangePassword(userId, newPassword);
+    const updatedUser = await userService.userChangePassword(userId, newPassword, oldPassword);
     return res.json(updatedUser);
   } catch (error) {
     next(error);

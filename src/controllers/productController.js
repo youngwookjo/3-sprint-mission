@@ -1,5 +1,6 @@
 import ProductService from "../services/productService.js";
 import { PRODUCT_ERROR } from "../constants/productConstants.js";
+import { checkUser } from "../utils/checkUser.js";
 
 const ProductController = {
   async getproductList(req, res, next) {
@@ -22,10 +23,10 @@ const ProductController = {
   },
 
   async getproduct(req, res, next) {
-    const id = req.params.id;
+    const productId = req.params.id;
     const userId = req.user?.userId;
     try {
-      const data = await ProductService.getProductWithLike(id, userId);
+      const data = await ProductService.getProductWithLike(userId, productId);
       res.json(data);
     } catch (error) {
       error.status = error.status || 500;
@@ -37,6 +38,7 @@ const ProductController = {
   async createProduct(req, res, next) {
     try {
       const userId = req.user?.userId;
+      await checkUser(userId);
       const data = { ...req.body, userId };
       const product = await ProductService.createProduct(data);
       res.status(201).json(product);
@@ -74,8 +76,9 @@ const ProductController = {
   async likeProduct(req, res, next) {
     const productId = req.params.id;
     const userId = req.user?.userId;
+    await checkUser(userId);
     try {
-      const product = await ProductService.likeProduct(productId, userId);
+      const product = await ProductService.likeProduct(userId, productId);
       res.json(product);
     } catch (error) {
       error.status = 500;
@@ -87,8 +90,9 @@ const ProductController = {
   async unlikeProduct(req, res, next) {
     const productId = req.params.id;
     const userId = req.user?.userId;
+    await checkUser(userId);
     try {
-      await ProductService.unlikeProduct(productId, userId);
+      await ProductService.unlikeProduct(userId, productId);
       res.sendStatus(204);
     } catch (error) {
       error.status = 500;

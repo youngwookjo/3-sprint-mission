@@ -1,5 +1,6 @@
 import ArticleService from "../services/articleService.js";
 import { ARTICLE_ERROR } from "../constants/articleConstants.js";
+import { checkUser } from "../utils/checkUser.js";
 
 const ArticleController = {
   async getArticleList(req, res, next) {
@@ -21,9 +22,10 @@ const ArticleController = {
   },
 
   async getArticle(req, res, next) {
-    const { id } = req.params;
+    const articleId = req.params.id;
+    const userId = req.user?.userId;
     try {
-      const article = await ArticleService.getArticle(id);
+      const article = await ArticleService.getArticleWithLike(userId, articleId);
       res.json(article);
     } catch (error) {
       error.status = 404;
@@ -34,10 +36,7 @@ const ArticleController = {
 
   async createArticle(req, res, next) {
     const userId = req.user?.userId;
-    if (!userId) {
-      const error = new Error('사용자 ID가 없습니다.');
-      error.status = 400;
-    }
+    await checkUser(userId);
     const data = { ...req.body, userId };
     try {
       const article = await ArticleService.createArticle(data);
@@ -72,6 +71,34 @@ const ArticleController = {
       next(error);
     }
   },
+
+  async likeArticle(req, res, next) {
+    const articleId = req.params.id;
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    try {
+      const article = await ArticleService.likeArticle(userId, articleId);
+      res.json(article);
+    } catch (error) {
+      error.status = 500;
+      error.message = '게시글 좋아요 중 오류가 발생했습니다.';
+      next(error);
+    }
+  },
+
+  async unlikeArticle(req, res, next) {
+    const articleId = req.params.id;
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    try {
+      await ArticleService.unlikeArticle(userId, articleId);
+      res.sendStatus(204);
+    } catch (error) {
+      error.status = 500;
+      error.message = '게시글 좋아요 취소 중 오류가 발생했습니다.';
+      next(error);
+    }
+  }
 }
 
 export default ArticleController;
