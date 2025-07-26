@@ -1,5 +1,4 @@
 import { expressjwt } from 'express-jwt'
-import  jwt  from 'jsonwebtoken';
 
 const verifyAccessToken = expressjwt({
   secret: process.env.JWT_ACCESS_SECRET,
@@ -41,23 +40,8 @@ const createVerifyAuth = (getResource, resourceName) => {
   }
 };
 
-const optionalVerifyToken = (req, res, next) => {
-  const auth = req.headers.authorization;
-  if (!auth) return next();
-  const token = auth.split(' ')[1];
-  try { 
-    req.user = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-  } catch (err) {
-    next(err);
-  }
-  next();
-};
-
-
-
 export default {
   verifyAccessToken,
   verifyRefreshToken,
-  createVerifyAuth,
-  optionalVerifyToken
+  createVerifyAuth
 };

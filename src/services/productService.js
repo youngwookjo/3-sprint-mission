@@ -38,7 +38,7 @@ const ProductService = {
     }
   },
 
-  async getproduct(id) {
+  async getProduct(id) {
     const data = await prisma.product.findUnique({
       where: { id },
       select: {
@@ -98,12 +98,21 @@ const ProductService = {
   },
 
   async likeProduct(userId, productId) {
-    return await prisma.productLike.create({
-      data: {
-        userId,
-        productId,
-      },
-    })
+    try {
+      await prisma.productLike.create({
+        data: {
+          userId,
+          productId,
+        },
+      })
+    } catch (error) {
+      if (error.code === 'P2002') {
+        const error = new Error('이미 좋아요한 상품입니다.');
+        error.status = 409;
+        throw error;
+      }
+    }
+    return true;
   },
 
   async unlikeProduct(userId, productId) {
@@ -115,34 +124,12 @@ const ProductService = {
   },
 
   async getProductWithLike(userId, productId) {
-    const data = await prisma.product.findUnique({
-      where: { id: productId },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        price: true,
-        tags: true,
-        createdAt: true,
-        userId: true,
-      }
-    });
-    if (!data) {
-      const error = new Error('상품을 찾을 수 없습니다.');
-      error.status = 404;
-      throw error;
-    }
-
-    if (!userId) {
-      return data;
-    }
-
+    const data = await this.getProduct(productId);
     const isLiked = await prisma.productLike.findUnique({
       where: {
         userId_productId: { userId, productId },
       },
     });
-
     data.isLiked = !!isLiked;
     return data;
   }

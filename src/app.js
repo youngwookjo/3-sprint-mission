@@ -14,6 +14,7 @@ import productRouter from './routes/productRouter.js';
 import { productCommentRouter, freeCommentRouter } from './routes/commentRouter.js';
 import articleRouter from './routes/articleRouter.js';
 import uploadImageRouter from './routes/uploadImageRouter.js';
+import authRouter from './routes/authRouter.js';
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/files', express.static('uploads'));
 //라우터
 app.use('/users', userRouter);
+app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/articles', articleRouter);
 app.use('/product-comments', productCommentRouter);

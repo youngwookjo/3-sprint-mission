@@ -23,9 +23,8 @@ const ArticleController = {
 
   async getArticle(req, res, next) {
     const articleId = req.params.id;
-    const userId = req.user?.userId;
     try {
-      const article = await ArticleService.getArticleWithLike(userId, articleId);
+      const article = await ArticleService.getArticle(articleId);
       res.json(article);
     } catch (error) {
       error.status = 404;
@@ -77,11 +76,11 @@ const ArticleController = {
     await checkUser(userId);
     const articleId = req.params.id;
     try {
-      const article = await ArticleService.likeArticle(userId, articleId);
-      res.json(article);
+      await ArticleService.likeArticle(userId, articleId);
+      res.json({ message: '게시글 좋아요 성공' });
     } catch (error) {
-      error.status = 500;
-      error.message = '게시글 좋아요 중 오류가 발생했습니다.';
+      error.status = error.status || 500;
+      error.message = error.message || '게시글 좋아요 중 오류가 발생했습니다.';
       next(error);
     }
   },
@@ -96,6 +95,20 @@ const ArticleController = {
     } catch (error) {
       error.status = 500;
       error.message = '게시글 좋아요 취소 중 오류가 발생했습니다.';
+      next(error);
+    }
+  },
+
+  async getArticleWithLike(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const articleId = req.params.id;
+    try {
+      const article = await ArticleService.getArticleWithLike(userId, articleId);
+      res.json(article);
+    } catch (error) {
+      error.status = 404;
+      error.message = '게시글을 찾을 수 없습니다.';
       next(error);
     }
   }

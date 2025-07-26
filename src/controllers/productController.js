@@ -22,11 +22,10 @@ const ProductController = {
     }
   },
 
-  async getproduct(req, res, next) {
+  async getProduct(req, res, next) {
     const productId = req.params.id;
-    const userId = req.user?.userId;
     try {
-      const data = await ProductService.getProductWithLike(userId, productId);
+      const data = await ProductService.getProduct(productId);
       res.json(data);
     } catch (error) {
       error.status = error.status || 500;
@@ -78,11 +77,11 @@ const ProductController = {
     await checkUser(userId);
     const productId = req.params.id;
     try {
-      const product = await ProductService.likeProduct(userId, productId);
-      res.json(product);
+      await ProductService.likeProduct(userId, productId);
+      res.status(200).json({ message: '상품 좋아요 성공'});;
     } catch (error) {
-      error.status = 500;
-      error.message = '상품 좋아요 중 오류가 발생했습니다.';
+      error.status = error.status || 500;
+      error.message = error.message || '상품 좋아요 중 오류가 발생했습니다.';
       next(error);
     }
   },
@@ -97,6 +96,20 @@ const ProductController = {
     } catch (error) {
       error.status = 500;
       error.message = '상품 좋아요 취소 중 오류가 발생했습니다.';
+      next(error);
+    }
+  },
+
+  async getProductWithLike(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const productId = req.params.id;
+    try {
+      const data = await ProductService.getProductWithLike(userId, productId);
+      res.json(data);
+    } catch (error) {
+      error.status = error.status || 500;
+      error.message = error.message || "상품 조회 중 오류가 발생했습니다";
       next(error);
     }
   }

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { ar } from 'zod/locales';
 const prisma = new PrismaClient();
 
 const ArticleService = {
@@ -17,7 +18,7 @@ const ArticleService = {
   },
 
   async getArticle(id) {
-    return await prisma.article.findUnique({
+    const data = await prisma.article.findUnique({
       where: { id },
       select: {
         id: true,
@@ -26,8 +27,16 @@ const ArticleService = {
         createdAt: true,
         userId: true,
       }
-    })
+    });
+
+    if (!data) {
+      const error = new Error('게시글을 찾을 수 없습니다.');
+      error.status = 404;
+      throw error;
+    }
+    return data;
   },
+
 
   async createArticle(data) {
     return await prisma.article.create({
@@ -64,12 +73,20 @@ const ArticleService = {
   },
 
   async likeArticle(userId, articleId) {
-    return await prisma.articleLike.create({
-      data: {
-        userId,
-        articleId,
-      },
-    })
+    try {
+      await prisma.articleLike.create({
+        data: {
+          userId,
+          articleId,
+        },
+      })
+    } catch (error) {
+      if (error.code === 'P2002') {
+        const error = new Error('이미 좋아요한 게시글입니다.');
+        error.status = 409;
+        throw error;
+      }
+    }
   },
 
   async unlikeArticle(userId, articleId) {
@@ -81,31 +98,14 @@ const ArticleService = {
   },
 
   async getArticleWithLike(userId, articleId) {
-    const data = await prisma.article.findUnique({
-      where: { id: articleId },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        createdAt: true,
-        userId: true,
+    const data = await this.getArticle(articleId);
+    const isLiked = await prisma.articleLike.findUnique({
+      where: {
+        userId_articleId: { userId, articleId },
       },
     });
 
-    if (!data) {
-      const error = new Error('게시글을 찾을 수 없습니다.');
-      error.status = 404;
-      throw error;
-    }
-
-    if (userId) {
-      const isLiked = await prisma.articleLike.findUnique({
-        where: {
-          userId_articleId: { userId, articleId },
-        },
-      });
-      data.isLiked = !!isLiked;
-    }
+    data.isLiked = !!isLiked;
     return data;
   }
 }
