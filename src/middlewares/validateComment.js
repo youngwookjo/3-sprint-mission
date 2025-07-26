@@ -1,7 +1,7 @@
 import { validate } from 'superstruct';
-import { VALIDATION_COMMENT_ERRORS } from '../constants/commentConstants.js';
 import { createComment, patchComment } from '../structs/commentStructs.js';
 import { ERROR_MESSAGES } from '../constants/errorConstants.js';
+import { VALIDATION_COMMENT_ERRORS } from '../constants/commentConstants.js';
 
 export function validateCreateComment(req, res, next) {
   const [error] = validate(req.body, createComment);

@@ -1,6 +1,6 @@
 import ArticleService from "../services/articleService.js";
-import { ARTICLE_ERROR } from "../constants/articleConstants.js";
 import { checkUser } from "../utils/checkUser.js";
+import { ARTICLE_ERROR } from "../constants/articleConstants.js";
 
 const ArticleController = {
   async getArticleList(req, res, next) {

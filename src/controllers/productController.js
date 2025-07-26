@@ -1,6 +1,6 @@
 import ProductService from "../services/productService.js";
-import { PRODUCT_ERROR } from "../constants/productConstants.js";
 import { checkUser } from "../utils/checkUser.js";
+import { PRODUCT_ERROR } from "../constants/productConstants.js";
 
 const ProductController = {
   async getproductList(req, res, next) {

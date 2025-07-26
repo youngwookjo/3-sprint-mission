@@ -1,7 +1,7 @@
 import { validate } from 'superstruct';
-import { VALIDATION_ARTICLE_ERRORS } from '../constants/articleConstants.js';
 import { createArticle, patchArticle } from '../structs/articleStructs.js';
 import { ERROR_MESSAGES } from '../constants/errorConstants.js';
+import { VALIDATION_ARTICLE_ERRORS } from '../constants/articleConstants.js';
 
 export function validateCreateArticle(req, res, next) {
   const [error] = validate(req.body, createArticle);

@@ -1,7 +1,7 @@
 import CommentService from "../services/commentService.js";
 import { setBoardTypeByBaseUrl } from "../utils/boardTypeSet.js";
-import { COMMENT_ERROR } from "../constants/commentConstants.js";
 import { checkUser } from "../utils/checkUser.js";
+import { COMMENT_ERROR } from "../constants/commentConstants.js";
 
 const CommentController = {
   async getCommentList(req, res, next) {
