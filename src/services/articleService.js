@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { ar } from 'zod/locales';
 const prisma = new PrismaClient();
 
 const ArticleService = {
