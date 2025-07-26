@@ -85,3 +85,4 @@ model ArticleLike {
 
   @@unique([userId, articleId])
 }
+
