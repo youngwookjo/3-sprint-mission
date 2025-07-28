@@ -9,12 +9,12 @@ import cookieParser from 'cookie-parser';
 import corsOptions from './config/corsOptions.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 //내부 라우터
+import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
 import { productCommentRouter, freeCommentRouter } from './routes/commentRouter.js';
 import articleRouter from './routes/articleRouter.js';
 import uploadImageRouter from './routes/uploadImageRouter.js';
-import authRouter from './routes/authRouter.js';
 
 
 const app = express();

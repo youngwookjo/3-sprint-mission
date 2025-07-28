@@ -1,4 +1,3 @@
-import { z } from "zod";
 import userRepository from "../repositories/userRepository.js"
 import productRepository from "../repositories/productRepository.js";
 import { hashPassword } from "../utils/passwordUtil.js";
@@ -14,21 +13,6 @@ const userCreate = async (user) => {
   if (existedUser) {
     const error = new Error('이미 존재하는 이메일입니다.');
     error.status = 409;
-    throw error;
-  }
-  const userSchema = z.object({
-    email: z.email({ message: '유효한 이메일을 입력해주세요.' }),
-    nickname: z.string()
-      .min(1, { message: '닉네임은 1자 이상이어야 합니다.' })
-      .max(8, { message: '닉네임은 8자 이하이어야 합니다.' }),
-    password: z.string()
-      .min(8, { message: '비밀번호는 8자 이상이어야 합니다.' })
-      .max(20, { message: '비밀번호는 20자 이하이어야 합니다.' }),
-  });
-  const validation = userSchema.safeParse(user);
-  if (!validation.success) {
-    const error = new Error(validation.error.issues.map(issue => issue.message));
-    error.status = 400;
     throw error;
   }
   const hashedPassword = await hashPassword(user.password);

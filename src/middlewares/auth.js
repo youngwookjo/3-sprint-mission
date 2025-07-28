@@ -1,4 +1,6 @@
 import { expressjwt } from 'express-jwt'
+import dotenv from 'dotenv';
+dotenv.config();
 
 const verifyAccessToken = expressjwt({
   secret: process.env.JWT_ACCESS_SECRET,
