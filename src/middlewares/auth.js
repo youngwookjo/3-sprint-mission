@@ -1,6 +1,10 @@
-import { expressjwt } from 'express-jwt'
 import dotenv from 'dotenv';
 dotenv.config();
+import { expressjwt } from 'express-jwt'
+import ProductService from '../services/productService.js';
+import ArticleService from '../services/articleService.js';
+import CommentService from '../services/commentService.js';
+
 
 const verifyAccessToken = expressjwt({
   secret: process.env.JWT_ACCESS_SECRET,
@@ -42,8 +46,14 @@ const createVerifyAuth = (getResource, resourceName) => {
   }
 };
 
+const authProductVerifyAuth = createVerifyAuth(ProductService.getProduct, '상품');
+const authArticleVerifyAuth = createVerifyAuth(ArticleService.getArticle, '게시글');
+const authCommentVerifyAuth = createVerifyAuth(CommentService.getComment, '댓글');
+
 export default {
   verifyAccessToken,
   verifyRefreshToken,
-  createVerifyAuth
+  authProductVerifyAuth,
+  authArticleVerifyAuth,
+  authCommentVerifyAuth
 };

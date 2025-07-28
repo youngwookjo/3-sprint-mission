@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { validateCreateProduct, validatePatchProduct } from '../middlewares/validateProduct.js';
 import auth from '../middlewares/auth.js';
 import ProductController from '../controllers/productController.js';
-import ProductService from '../services/productService.js';
 
 const productRouter = Router();
 
@@ -12,8 +11,8 @@ productRouter.route('/')
 
 productRouter.route('/:id')
   .get(ProductController.getProduct)
-  .patch(validatePatchProduct, auth.verifyAccessToken, auth.createVerifyAuth(ProductService.getproduct, '상품'), ProductController.patchProduct)
-  .delete(auth.verifyAccessToken, auth.createVerifyAuth(ProductService.getproduct, '상품'), ProductController.deleteProduct);
+  .patch(validatePatchProduct, auth.verifyAccessToken, auth.authProductVerifyAuth, ProductController.patchProduct)
+  .delete(auth.verifyAccessToken, auth.authProductVerifyAuth, ProductController.deleteProduct);
 
 productRouter.route('/:id/like')
   .post(auth.verifyAccessToken, ProductController.likeProduct)

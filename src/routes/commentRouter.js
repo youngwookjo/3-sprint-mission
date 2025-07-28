@@ -11,15 +11,15 @@ productCommentRouter.route('/product/:id')
   .get(CommentController.getCommentList)
   .post(validateCreateComment, auth.verifyAccessToken, CommentController.createComment);
 productCommentRouter.route('/comment/:id')
-  .patch(validatePatchComment, auth.verifyAccessToken, auth.createVerifyAuth(CommentService.getComment, '댓글'), CommentController.patchComment)
-  .delete(auth.verifyAccessToken, auth.createVerifyAuth(CommentService.getComment, '댓글'), CommentController.deleteComment);
+  .patch(validatePatchComment, auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.patchComment)
+  .delete(auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.deleteComment);
 
 freeCommentRouter.route('/article/:id')
   .get(CommentController.getCommentList)
   .post(validateCreateComment, auth.verifyAccessToken, CommentController.createComment)
 freeCommentRouter.route('/comment/:id')
-  .patch(validatePatchComment, auth.verifyAccessToken, auth.createVerifyAuth(CommentService.getComment, '댓글'), CommentController.patchComment)
-  .delete(auth.verifyAccessToken, auth.createVerifyAuth(CommentService.getComment, '댓글'), CommentController.deleteComment);
+  .patch(validatePatchComment, auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.patchComment)
+  .delete(auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.deleteComment);
 
 
 
