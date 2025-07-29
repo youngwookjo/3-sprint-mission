@@ -1,24 +1,24 @@
 import { Router } from "express";
-import CommentController from "../controllers/commentController.js";
+import auth from "../middlewares/auth.js";
 import { validateCreateComment, validatePatchComment } from "../middlewares/validateComment.js";
+import CommentController from "../controllers/commentController.js";
 
 export const productCommentRouter = Router();
 export const freeCommentRouter = Router();
 
 productCommentRouter.route('/product/:id')
   .get(CommentController.getCommentList)
-  .post(validateCreateComment, CommentController.createComment);
+  .post(validateCreateComment, auth.verifyAccessToken, CommentController.createComment);
 productCommentRouter.route('/comment/:id')
-  .patch(validatePatchComment, CommentController.patchComment)
-  .delete(CommentController.deleteComment);
+  .patch(validatePatchComment, auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.patchComment)
+  .delete(auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.deleteComment);
 
 freeCommentRouter.route('/article/:id')
   .get(CommentController.getCommentList)
-  .post(validateCreateComment, CommentController.createComment)
+  .post(validateCreateComment, auth.verifyAccessToken, CommentController.createComment)
 freeCommentRouter.route('/comment/:id')
-  .patch(validatePatchComment, CommentController.patchComment)
-  .delete(CommentController.deleteComment);
-
+  .patch(validatePatchComment, auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.patchComment)
+  .delete(auth.verifyAccessToken, auth.authCommentVerifyAuth, CommentController.deleteComment);
 
 
 

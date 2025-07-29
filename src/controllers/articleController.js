@@ -1,13 +1,17 @@
 import ArticleService from "../services/articleService.js";
+import { checkUser } from "../utils/checkUser.js";
 import { ARTICLE_ERROR } from "../constants/articleConstants.js";
 
 const ArticleController = {
   async getArticleList(req, res, next) {
     try {
-      const { offset, limit } = req.query;
+      const { offset, limit, } = req.query;
+      let orderBy = req.query.orderBy;
+      orderBy = (orderBy === 'recent') ? { createdAt: 'desc' } : undefined;
       const articles = await ArticleService.getArticleList({
         offset,
         limit,
+        orderBy
       });
       res.json(articles);
     } catch (error) {
@@ -18,9 +22,9 @@ const ArticleController = {
   },
 
   async getArticle(req, res, next) {
-    const { id } = req.params;
+    const articleId = req.params.id;
     try {
-      const article = await ArticleService.getArticle(id);
+      const article = await ArticleService.getArticle(articleId);
       res.json(article);
     } catch (error) {
       error.status = 404;
@@ -30,12 +34,15 @@ const ArticleController = {
   },
 
   async createArticle(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const data = { ...req.body, userId };
     try {
-      const article = await ArticleService.createArticle(req.body);
+      const article = await ArticleService.createArticle(data);
       res.status(201).json(article);
     } catch (error) {
-      error.status = 400;
-      error.message = ARTICLE_ERROR.CREATE_ARTICLE_ERROR;
+      error.status = error.status || 500;
+      error.message = error.message || ARTICLE_ERROR.CREATE_ARTICLE_ERROR;
       next(error);
     }
   },
@@ -63,6 +70,48 @@ const ArticleController = {
       next(error);
     }
   },
+
+  async likeArticle(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const articleId = req.params.id;
+    try {
+      await ArticleService.likeArticle(userId, articleId);
+      res.json({ message: '게시글 좋아요 성공' });
+    } catch (error) {
+      error.status = error.status || 500;
+      error.message = error.message || '게시글 좋아요 중 오류가 발생했습니다.';
+      next(error);
+    }
+  },
+
+  async unlikeArticle(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const articleId = req.params.id;
+    try {
+      await ArticleService.unlikeArticle(userId, articleId);
+      res.sendStatus(204);
+    } catch (error) {
+      error.status = 500;
+      error.message = '게시글 좋아요 취소 중 오류가 발생했습니다.';
+      next(error);
+    }
+  },
+
+  async getArticleWithLike(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const articleId = req.params.id;
+    try {
+      const article = await ArticleService.getArticleWithLike(userId, articleId);
+      res.json(article);
+    } catch (error) {
+      error.status = 404;
+      error.message = '게시글을 찾을 수 없습니다.';
+      next(error);
+    }
+  }
 }
 
 export default ArticleController;

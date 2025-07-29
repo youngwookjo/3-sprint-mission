@@ -1,5 +1,6 @@
 import CommentService from "../services/commentService.js";
 import { setBoardTypeByBaseUrl } from "../utils/boardTypeSet.js";
+import { checkUser } from "../utils/checkUser.js";
 import { COMMENT_ERROR } from "../constants/commentConstants.js";
 
 const CommentController = {
@@ -21,13 +22,16 @@ const CommentController = {
   },
 
   async createComment(req, res, next) {
+    const userId = req.user?.userId;
+    await checkUser(userId);
+    const data = { content: req.body.content, userId };
     const id = { [setBoardTypeByBaseUrl(req.baseUrl)]: req.params.id };
     try {
-      const comment = await CommentService.createComment(id, req.body);
+      const comment = await CommentService.createComment(id, data);
       res.status(201).json(comment);
     } catch (error) {
-      error.status = 400;
-      error.message = COMMENT_ERROR.CREATE_COMMENT_ERROR;
+      error.status = error.status || 500;
+      error.message = error.message || COMMENT_ERROR.CREATE_COMMENT_ERROR;
       next(error);
     }
   },

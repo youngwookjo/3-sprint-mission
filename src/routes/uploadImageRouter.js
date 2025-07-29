@@ -1,8 +1,12 @@
 import { Router } from 'express';
+import dotenv from 'dotenv';
 import { uploadImage } from '../middlewares/uploadImage.js';
 import { ERROR_MESSAGES } from '../constants/errorConstants.js';
 
+dotenv.config();
 const uploadImageRouter = Router();
+
+const hostUrl = process.env.HOST_URL || 'http://localhost:3000';
 
 uploadImageRouter.post('/', uploadImage, (req, res) => {
   if (!req.file) {
@@ -10,7 +14,7 @@ uploadImageRouter.post('/', uploadImage, (req, res) => {
   } res.status(200).json({
     message: '🗂️ 파일 업로드 완료',
     filename: req.file.filename,
-    path: `http://localhost:3000/files/${req.file.filename}`,
+    path: `${hostUrl}/files/${req.file.filename}`,
   })
 });
 
