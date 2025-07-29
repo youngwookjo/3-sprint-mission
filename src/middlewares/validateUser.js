@@ -19,7 +19,6 @@ const userUpdateSchema = baseUserSchema.partial().pick({
 
 const createValidateMiddleware = (schema) => (req, res, next) => {
   const user = {};
-  console.log(Object.keys(schema.shape))
   for (const key of Object.keys(schema.shape)) {
     if (req.body[key] !== undefined) {
       user[key] = req.body[key];
