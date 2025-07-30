@@ -13,7 +13,7 @@ const login = async (email, password) => {
   }
   const isValidPassword = await isPasswordValid(password, user.password);
   if (!isValidPassword) {
-    const error = new Error('비밀번호가 일치하지 않습니다.');
+    const error = new Error('사용자 정보가 일치하지 않습니다.');
     error.status = 401;
     throw error;
   }
@@ -27,7 +27,7 @@ const changePassword = async (userId, newPassword, oldPassword) => {
   const user = await checkUser(userId);
   const isValidPassword = await isPasswordValid(oldPassword, user.password);
   if (!isValidPassword) {
-    const error = new Error('현재 비밀번호가 일치하지 않습니다.');
+    const error = new Error('사용자 정보가 일치하지 않습니다.');
     error.status = 401;
     throw error;
   }

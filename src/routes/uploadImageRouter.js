@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import dotenv from 'dotenv';
+import { Router } from 'express';
 import { uploadImage } from '../middlewares/uploadImage.js';
 import { ERROR_MESSAGES } from '../constants/errorConstants.js';
 

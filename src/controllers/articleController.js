@@ -77,7 +77,7 @@ const ArticleController = {
     const articleId = req.params.id;
     try {
       await ArticleService.likeArticle(userId, articleId);
-      res.json({ message: '게시글 좋아요 성공' });
+      res.sendStatus(204);
     } catch (error) {
       error.status = error.status || 500;
       error.message = error.message || '게시글 좋아요 중 오류가 발생했습니다.';

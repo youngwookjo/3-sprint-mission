@@ -78,7 +78,7 @@ const ProductController = {
     const productId = req.params.id;
     try {
       await ProductService.likeProduct(userId, productId);
-      res.status(200).json({ message: '상품 좋아요 성공'});;
+      res.sendStatus(204);
     } catch (error) {
       error.status = error.status || 500;
       error.message = error.message || '상품 좋아요 중 오류가 발생했습니다.';

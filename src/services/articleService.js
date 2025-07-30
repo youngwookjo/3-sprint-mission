@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../config/prisma.js';
 
 const ArticleService = {
   async getArticleList({ offset = '0', limit = '10', orderBy = undefined } = {}) {

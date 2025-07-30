@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../config/prisma.js';
 
 const CommentService = {
   async getCommentList(id, { cursor, limit = '10' } = {}) {
