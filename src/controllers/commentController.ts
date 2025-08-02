@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { HttpError } from "../types/error.js";
+import { HttpError } from "../types/error";
 import CommentService from "../services/commentService";
 import { setBoardTypeByBaseUrl } from "../utils/boardTypeSet";
 import { checkUser } from "../utils/checkUser";
