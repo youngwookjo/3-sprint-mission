@@ -28,4 +28,5 @@ export type CreateArticleDto = Omit<ArticleDto, 'id' | 'createdAt'>;
  * content: string | null
  * }
  */
+
 export type PatchArticleDto = Partial<Omit<CreateArticleDto, 'userId'>>;

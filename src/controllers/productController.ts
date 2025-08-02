@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
-import { HttpError } from "../types/error.js";
+import { HttpError } from "../types/error";
 import { PaginationQueryDto } from "../types/common";
-import ProductService from "../services/productService.js";
-import { checkUser } from "../utils/checkUser.js";
+import ProductService from "../services/productService";
+import { checkUser } from "../utils/checkUser";
 import { PRODUCT_ERROR } from "../constants/productConstants";
 
 /**

@@ -1,8 +1,8 @@
 import { validate } from 'superstruct';
 import { Request, Response, NextFunction } from 'express';
-import { createArticle, patchArticle } from '../structs/articleStructs.js';
-import { ERROR_MESSAGES } from '../constants/errorConstants.js';
-import { VALIDATION_ARTICLE_ERRORS } from '../constants/articleConstants.js';
+import { createArticle, patchArticle } from '../structs/articleStructs';
+import { ERROR_MESSAGES } from '../constants/errorConstants';
+import { VALIDATION_ARTICLE_ERRORS } from '../constants/articleConstants';
 
 export function validateCreateArticle(req: Request, res: Response, next: NextFunction) {
   const [error] = validate(req.body, createArticle);

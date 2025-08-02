@@ -1,8 +1,8 @@
 import { validate } from 'superstruct';
 import { Request, Response, NextFunction } from 'express';
-import { createProduct, patchProduct } from '../structs/productStructs.js';
-import { ERROR_MESSAGES } from '../constants/errorConstants.js';
-import { VALIDATION_PRODUCT_ERRORS } from '../constants/productConstants.js';
+import { createProduct, patchProduct } from '../structs/productStructs';
+import { ERROR_MESSAGES } from '../constants/errorConstants';
+import { VALIDATION_PRODUCT_ERRORS } from '../constants/productConstants';
 
 
 export function validateCreateProduct(req: Request, res: Response, next: NextFunction) {

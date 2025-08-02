@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import userService from '../services/userService.js';
+import userService from '../services/userService';
 
 /**
  * 유저 생성 요청 핸들러

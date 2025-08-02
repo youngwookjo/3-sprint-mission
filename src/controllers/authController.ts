@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import authService from '../services/authService.js';
+import authService from '../services/authService';
 
 /**
  * 로그인 요청 핸들러

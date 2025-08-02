@@ -2,6 +2,7 @@ import { ErrorRequestHandler } from "express";
 import { ERROR_MESSAGES } from "../constants/errorConstants";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  console.error('에러 발생:', err);
 
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ message: ERROR_MESSAGES.IMAGE_FILE_SIZE_ERROR });

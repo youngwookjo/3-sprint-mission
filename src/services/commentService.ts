@@ -1,11 +1,11 @@
-import prisma from '../config/prisma.js';
+import prisma from '../config/prisma';
 import {
   BoardTypeDto,
   CommentDto,
   CreateCommentDto,
   PatchCommentDto
-} from '../types/comment.js';
-import { HttpError } from '../types/error.js';
+} from '../types/comment';
+import { HttpError } from '../types/error';
 
 const CommentService = {
   async getCommentList(id: BoardTypeDto, cursor: string | null, limit: number = 10): Promise<CommentDto[]> {

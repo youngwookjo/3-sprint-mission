@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
-import ArticleService from "../services/articleService.js";
-import { checkUser } from "../utils/checkUser.js";
-import { ARTICLE_ERROR } from "../constants/articleConstants.js";
-import { PaginationQueryDto } from "../types/common.js";
-import { HttpError } from "../types/error.js";
-import ar from "zod/v4/locales/ar.cjs";
+import ArticleService from "../services/articleService";
+import { checkUser } from "../utils/checkUser";
+import { ARTICLE_ERROR } from "../constants/articleConstants";
+import { PaginationQueryDto } from "../types/common";
+import { HttpError } from "../types/error";
+
 
 const getArticleList: RequestHandler = async (req, res, next) => {
   try {

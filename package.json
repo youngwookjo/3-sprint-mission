@@ -1,6 +1,5 @@
 {
   "name": "sprint-misson3",
-  "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/app.ts",
     "start": "node dist/app.js",
@@ -35,6 +34,7 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^24.1.0",
     "nodemon": "^3.1.10",
-    "typescript": "^5.8.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

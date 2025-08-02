@@ -2,11 +2,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { expressjwt } from 'express-jwt'
 import { RequestHandler } from 'express';
-import { GetResourceFn } from '../types/auth.js';
-import { HttpError } from '../types/error.js';
-import ProductService from '../services/productService.js';
-import ArticleService from '../services/articleService.js';
-import CommentService from '../services/commentService.js';
+import { GetResourceFn } from '../types/auth';
+import { HttpError } from '../types/error';
+import ProductService from '../services/productService';
+import ArticleService from '../services/articleService';
+import CommentService from '../services/commentService';
 
 
 

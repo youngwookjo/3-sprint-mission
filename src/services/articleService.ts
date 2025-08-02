@@ -1,11 +1,11 @@
-import prisma, { Prisma } from '../config/prisma.js';
+import prisma, { Prisma } from '../config/prisma';
 import {
   ArticleDto,
   CreateArticleDto,
   PatchArticleDto,
   ArticleWithLikeDto
-} from '../types/article.js';
-import { HttpError } from '../types/error.js';
+} from '../types/article';
+import { HttpError } from '../types/error';
 
 const ArticleService = {
   async getArticleList(offset = 0, limit = 10, orderBy: 'asc' | 'desc' = 'desc'): Promise<ArticleDto[]> {
