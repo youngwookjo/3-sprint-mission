@@ -28,7 +28,7 @@ const createValidateMiddleware = (schema: typeof userCreateSchema | typeof userU
   }
   const validation = schema.safeParse(user);
   if (!validation.success) {
-    const messages = validation.error.issues.map((issue) => issue.message);
+    const messages = validation.error.issues.map((issue: { message: string }) => issue.message);
     const error = new HttpError(messages.join(', '), 400);
     return next(error);
   }
