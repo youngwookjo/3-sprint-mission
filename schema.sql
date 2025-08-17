@@ -19,6 +19,8 @@ CREATE TABLE social_account (
     user_id INT NOT NULL,
     provider ENUM('google','kakao') NOT NULL,
     provider_id VARCHAR(100) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uq_provider_providerid (provider, provider_id),
     UNIQUE KEY uq_user_provider (user_id, provider),
     FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE RESTRICT ON DELETE CASCADE
@@ -67,6 +69,8 @@ CREATE TABLE article (
     title VARCHAR(20) NOT NULL,
     content TEXT NOT NULL,
     image VARCHAR(100) NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
