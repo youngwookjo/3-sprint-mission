@@ -25,7 +25,6 @@ export function createSocketServer(server: http.Server) {
     console.log("사용자가 연결되었습니다:", userId);
 
     socket.join(`notification:${userId}`);
-
     notificationRead(socket);
 
     socket.on(EventType.DISCONNECT, () => {
@@ -35,10 +34,5 @@ export function createSocketServer(server: http.Server) {
   setupNotificationEventBus(io);
 
   console.log("Socket.IO 서버가 초기화되었습니다.");
-  return io;
-}
-
-export function getSocketServer(): Server {
-  if (!io) throw new Error("Socket.IO 서버가 아직 생성되지 않았습니다.");
   return io;
 }

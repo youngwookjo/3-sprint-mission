@@ -1,7 +1,8 @@
-import { Request, RequestHandler, Response } from 'express';
+import { RequestHandler } from 'express';
 import  NotificationService  from './notification.service';
 import { HttpError } from '../types/error';
 
+//알림 리스트 불러오기
 const getNotificationList:RequestHandler = async (req, res, next) => {
     try {
       const userId = req.user?.userId;
@@ -15,6 +16,7 @@ const getNotificationList:RequestHandler = async (req, res, next) => {
     }
   }
 
+  //안 읽은 알림 개수 불러오기
 const getUnreadCount:RequestHandler = async (req, res, next) => {
     try {
       const userId = req.user?.userId;
@@ -28,6 +30,7 @@ const getUnreadCount:RequestHandler = async (req, res, next) => {
     }
 };
 
+//알림 읽음 처리하기
 const markNotificationAsRead:RequestHandler = async (req, res, next) => {
     try {
       await NotificationService.markNotificationAsRead(req.params.notificationId);
