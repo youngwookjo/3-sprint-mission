@@ -15,6 +15,7 @@ export const setupNotificationEventBus = (io: Server) => {
   });
 };
 
+//알림 읽기 처리
 export const notificationRead = (socket: Socket) => {
   socket.on("notificationRead", async (notificationId) => {
     try {
