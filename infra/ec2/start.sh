@@ -1,6 +1,21 @@
 # 프로젝트 루트 이동
 cd /home/ec2-user/3-sprint-mission
 
+# 최신코드 가져오기
+git pull origin main
+
+# 의존성 설치
+npm install
+
+# prisma 클라이언트 재생성
+npx prisma generate
+
+# 데이터베이스 마이그레이션
+npx prisma migrate deploy
+
+# 타입스크립트 빌드
+npm run build
+
 # 빌드 확인 (TypeScript 프로젝트라면)
 if [ ! -d "dist" ]; then
   echo "dist 폴더가 없습니다. 빌드를 먼저 진행하세요."
