@@ -1,41 +1,39 @@
+#!/bin/bash
+set -e
+
 # 프로젝트 루트 이동
 cd /home/ec2-user/3-sprint-mission
 
-# 최신코드 가져오기
+echo "최신 코드 가져오기"
 git pull origin main
 
-# 의존성 설치
-npm install
+echo "의존성 설치"
+npm install --production
 
-# prisma 클라이언트 재생성
+echo "Prisma 클라이언트 재생성..."
 npx prisma generate
 
-# 데이터베이스 마이그레이션
+echo "데이터베이스 마이그레이션"
 npx prisma migrate deploy
 
-# 타입스크립트 빌드
+echo "타입스크립트 빌드"
 npm run build
 
-# 빌드 확인 (TypeScript 프로젝트라면)
+# 빌드 확인
 if [ ! -d "dist" ]; then
   echo "dist 폴더가 없습니다. 빌드를 먼저 진행하세요."
   exit 1
 fi
 
-# PM2 실행
+echo "PM2로 앱 실행"
 mkdir -p logs
-pm2 start dist/src/main.js \
-  --name my-app \
-  --env production \
-  --output logs/out.log \
-  --error logs/err.log \
-  --log-date-format "YYYY-MM-DD HH:mm:ss" \
-  --instances 1 \
-  --watch
 
-# 재부팅 시 자동 실행
+# ecosystem.config.js 기반 실행 (중복 옵션 제거)
+pm2 start infra/ec2/ecosystem.config.js --env production
+
+echo "PM2 프로세스 저장 & 재부팅 자동 실행 등록"
 pm2 save
-pm2 startup
+pm2 startup -u ec2-user --hp /home/ec2-user
 
-# 실행 상태 확인
+echo "실행 상태 확인"
 pm2 list
