@@ -2,16 +2,6 @@ import prisma from '../config/prisma';
 import type { Notification, CreateNotificationDto } from './notification.dto';
 
 
-const create = async (data: CreateNotificationDto): Promise<Notification> => {
-  return prisma.notification.create({
-    data: {
-      userId: data.userId,
-      type: data.type,
-      message: data.message,
-    },
-  });
-};
-
 const findListByUserId = async (userId: string): Promise<Notification[]> => {
   return prisma.notification.findMany({
     where: { userId },
