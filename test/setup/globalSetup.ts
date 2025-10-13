@@ -14,7 +14,6 @@ export default async function globalSetup() {
   await prisma.$connect();
   
   try{
-      await prisma.notification.deleteMany();
   await prisma.articleLike.deleteMany();
   await prisma.productLike.deleteMany();
   await prisma.comment.deleteMany();
