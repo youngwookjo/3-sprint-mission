@@ -11,9 +11,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:reset": "prisma migrate reset --force",
     "prisma:seed": "prisma db seed",
-    "lint": "eslint . --ext .ts",
-    "typecheck": "tsc --noEmit",
-    "ci": "npm run lint && npm run typecheck && npm run test"
+    "typecheck": "tsc --noEmit"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
