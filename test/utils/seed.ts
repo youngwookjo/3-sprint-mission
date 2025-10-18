@@ -1,4 +1,4 @@
-import { PrismaClient, NotificationType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../../src/utils/passwordUtil";
 
 const prisma = new PrismaClient();
