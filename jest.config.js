@@ -31,10 +31,8 @@ const config = {
   // Setup files
   setupFilesAfterEnv: [],
   
-  // Test match patterns
+  // Test match patterns - 모든 위치의 .test/.spec 파일만 실행
   testMatch: [
-    '<rootDir>/test/**/*.(test|spec).(js|jsx|ts|tsx)',
-    '**/__tests__/**/*.(js|jsx|ts|tsx)',
     '**/*.(test|spec).(js|jsx|ts|tsx)'
   ],
   
