@@ -11,9 +11,6 @@ WORKDIR /docker-compose-app
 COPY package*.json ./
 RUN npm ci
 
-# openssl 설치
-RUN apt-get update -y && apt-get install -y openssl
-
 # 애플리케이션 소스 복사
 COPY . .
 
